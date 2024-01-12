@@ -57,3 +57,4 @@ class Wavefield_3D(Wavefield_2D):
         super().__init__()
         
         self._type = "3D wave propagation in constant density acoustic isotropic media"    
+a
