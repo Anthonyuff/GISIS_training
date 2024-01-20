@@ -58,4 +58,9 @@ class Wavefield_3D(Wavefield_2D):
         
         self._type = "3D wave propagation in constant density acoustic isotropic media"    
 class Modelo_velocidade():
-    def().__init__():
+    def().__init__(self,nz,dz):
+        self.nz=nz
+        self.dz=dz
+        self.model=np.zeros(nz)
+        self.depth=np.arange(nz)*self.dz
+   
