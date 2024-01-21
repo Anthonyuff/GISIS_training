@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 class Wavefield_1D():
     
-    def __init__(self):
+    def __init__(self,nz,dz):
         
         self._type = "1D wave propagation in constant density acoustic isotropic media"
 
@@ -12,6 +12,11 @@ class Wavefield_1D():
         self.nt = 1001
         self.dt = 1e-3
         self.fmax = 30.0
+       
+        self.nz=nz
+        self.dz=dz
+        self.model=np.zeros(nz)
+        self.depth=np.arange(nz)*self.dz
 
     def get_type(self):
         print(self._type)
