@@ -18,12 +18,10 @@ class Wavefield_1D():
         self.model=np.zeros(self.nz)
         self.depth=np.arange(self.nz)*self.dz
         self.c=343 #m/s
-    def extrapolation(self):
-        d2p=[]
-        for i in range (nt):
-            for i in range(1,self.nz-1):
-                d2p[i]=2*
-
+        self.interfaces = [z1, z2, z3, ..., zn]
+        self.velocities = [1500, 2000, 2500, 3000]
+    def set_model(self):
+        
     def get_type(self):
         print(self._type)
 
