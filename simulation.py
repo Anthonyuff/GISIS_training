@@ -12,10 +12,13 @@ def simulation():
               scalar.Wavefield_3D()] 
 
     # print(myWave[id]._type)
-    myWave[id].get_type()#recomendavel 
+    myWave[id].set_model()#recomendavel 
+    myWave[id].get_type()
 
     myWave[id].set_wavelet()
     myWave[id].plot_wavelet()
+    myWave[id].plot_model()
+    
 
 
 if __name__ == "__main__":
