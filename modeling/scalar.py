@@ -14,25 +14,31 @@ class Wavefield_1D():
         self.fmax = 20.0
        
         self.nz=1000
-        self.dz=0.5
+        self.dz=7
         self.tempo=np.arange(self.nt)*self.dt
         self.depth=np.arange(self.nz)*self.dz
         
-        self.interfaces = [1010, 2000, 2500, 4000]
-        self.velocities = [1500, 2000, 2500, 3000]
-
-
-    def set_model(self):
+        self.interfaces = [1000, 2000, 3000, 4000]
+        self.velocities = [1500, 2000, 2500, 3000,4500] 
         self.model = np.full(self.nz, self.velocities[0])
+
+    def set_model(self):#
+        
         
         self.interface_indices = np.searchsorted(self.depth, self.interfaces)
         
         for layerId, index in enumerate(self.interface_indices):
-            self.model[index:] = self.velocities[layerId + 1]
+            self.model[index:] = self.velocities[layerId+1]
     
 
     def plot_model(self):
         plt.plot(self.model,self.depth)
+        plt.title("Model", fontsize = 18)
+        plt.xlabel("Velocity [m/s]", fontsize = 15)
+        plt.ylabel("Depth [m]", fontsize = 15)
+        plt.gca().invert_yaxis()
+        plt.grid(True)
+
         plt.tight_layout()
         plt.show()
         
