@@ -15,10 +15,10 @@ class Wavefield_1D():
        
         self.nz=1000
         self.dz=0.5
-        self.model=np.zeros(self.nz)
+        self.tempo=np.zeros(self.nt)*self.dt
         self.depth=np.arange(self.nz)*self.dz
         self.c=343 #m/s
-        self.interfaces = [z1, z2, z3, ..., zn]
+        self.interfaces = [300, 400, 600, 1000]
         self.velocities = [1500, 2000, 2500, 3000]
     def set_model(self):
         
