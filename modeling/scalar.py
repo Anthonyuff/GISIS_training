@@ -47,6 +47,8 @@ class Wavefield_1D():
     
 
         plt.tight_layout()
+        plt.legend()
+
         plt.show()
         
         
