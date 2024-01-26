@@ -21,7 +21,10 @@ class Wavefield_1D():
         self.interfaces = [1000, 2000, 3000, 4000]
         self.velocities = [1500, 2000, 2500, 3000,4500] 
         self.model = np.full(self.nz, self.velocities[0])
-
+        self.z_fonte=[100,250,300]
+        self.z_recp=[600,1000,2000,3500,4000]
+        
+        
     def set_model(self):#configurar a velocidade com a interface
         
         
@@ -29,18 +32,23 @@ class Wavefield_1D():
         
         for layerId, index in enumerate(self.interface_indices):
             self.model[index:] = self.velocities[layerId+1]
-    
+
 
     def plot_model(self):
+        
         plt.plot(self.model,self.depth)
         plt.title("Model", fontsize = 18)
         plt.xlabel("Velocity [m/s]", fontsize = 15)
         plt.ylabel("Depth [m]", fontsize = 15)
         plt.gca().invert_yaxis()
         plt.grid(True)
+        plt.scatter(np.full(len(self.z_fonte),self.velocities[0]), self.z_fonte, color='red', marker='*', label='Fonte')
+        plt.scatter(self.velocities, self.z_recp, color='blue', marker='v', label='Receptor')
+    
 
         plt.tight_layout()
         plt.show()
+        
         
 
     def get_type(self):
