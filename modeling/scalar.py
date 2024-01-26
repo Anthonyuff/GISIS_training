@@ -49,7 +49,10 @@ class Wavefield_1D():
         plt.tight_layout()
         plt.legend()
 
+
+        plt.savefig('modelo_de_velocidade.png',  bbox_inches='tight')
         plt.show()
+
         
         
 
