@@ -22,7 +22,7 @@ class Wavefield_1D():
         self.velocities = [1500, 2000, 2500, 3000,4500] 
         self.model = np.full(self.nz, self.velocities[0])
 
-    def set_model(self):#
+    def set_model(self):#configurar a velocidade com a interface
         
         
         self.interface_indices = np.searchsorted(self.depth, self.interfaces)
