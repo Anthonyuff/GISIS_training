@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from numba import njit, prange 
 
 class Wavefield_1D():
     
@@ -32,6 +33,7 @@ class Wavefield_1D():
         
         for layerId, index in enumerate(self.interface_indices):
             self.model[index:] = self.velocities[layerId+1]
+            print(self.model)
 
 
     def plot_model(self):
@@ -53,12 +55,36 @@ class Wavefield_1D():
         plt.savefig('modelo_de_velocidade.png',  bbox_inches='tight')
         plt.show()
 
-        
-        
+    def wave_prog(self):
+        self.P = np.zeros((self.nz, self.nt)) # P_{i,n}
+
+        sId = int(self.z_fonte[0] / self.dz)
+
+        for n in range(1,self.nt-1):
+
+            self.P[sId,n] += self.wavelet[n]    
+
+            laplacian = laplacian_1d(self.P, self.dz, self.nz, n)
+
+            self.P[:,n+1] = (self.dt*self.model)**2 * laplacian + 2.0*self.P[:,n] - self.P[:,n-1]
+
+       
 
     def get_type(self):
         print(self._type)
+    def plot_wavefield(self):
+        fig, ax = plt.subplots(num = "Wavefield plot", figsize = (8, 8), clear = True)
 
+        ax.imshow(self.P, aspect = "auto", cmap = "Greys")
+
+        # ax.plot(self.P[:,5000])
+
+        ax.set_title("Wavefield", fontsize = 18)
+        ax.set_xlabel("Time [s]", fontsize = 15)
+        ax.set_ylabel("Depth [m]", fontsize = 15) 
+        
+        fig.tight_layout()
+        plt.show()
     def set_wavelet(self):
     
         t0 = 2.0*np.pi/self.fmax
@@ -84,7 +110,14 @@ class Wavefield_1D():
         
         fig.tight_layout()
         plt.show()
+@njit 
+def laplacian_1d(P , dz, nz, time_id):
+    d2P_dz2 = np.zeros(nz)
 
+    for i in prange(1, nz-1): 
+        d2P_dz2[i] = (P[i-1,time_id] - 2.0*P[i,time_id] + P[i+1,time_id]) / dz**2.0    
+
+    return d2P_dz2
 
 class Wavefield_2D(Wavefield_1D):
     
