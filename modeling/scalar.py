@@ -78,24 +78,46 @@ class Wavefield_1D():
 
     def get_type(self):
         print(self._type)
-    def plot_wavefield(self,frames):
-        self.ax.clear()
+
+    
+
+    def plot_wavefield(self):
+        
+        fig2 , ax = plt.subplots(num="Wavefield plot", figsize=(8, 8), clear=True)
 
         
-        #image=self.ax.imshow(self.P[:,frame][:, np.newaxis], aspect = "auto", cmap = "Greys")
+        
+        ax.imshow(self.P, aspect = "auto", cmap = "Greys")
 
-        image=self.ax.plot(self.P[:,frames])
+        
+
+        ax.set_title("Wavefield", fontsize = 18)
+        ax.set_xlabel("Time [s]", fontsize = 15)
+        ax.set_ylabel("Depth [m]", fontsize = 15) 
+        
+        fig2.tight_layout()
+        plt.show()
+        
+    def grafico_animação(self,frame):
+        self.ax.clear()
+
+        imagem = self.ax.imshow(self.P[frame % self.P.shape[0], :][np.newaxis, :], aspect="auto", cmap="Greys")
+
+        #imagem=self.ax.imshow(self.P[frame,:][np.newaxis ,:], aspect = "auto", cmap = "Greys")
+
+        #image=self.ax.plot(self.P[:,frames])
 
         self.ax.set_title("Wavefield", fontsize = 18)
         self.ax.set_xlabel("Time [s]", fontsize = 15)
         self.ax.set_ylabel("Depth [m]", fontsize = 15) 
         
         self.fig.tight_layout()
-        return image
+        return (imagem,)
+    
     def animação(self):
         
 
-        ani = FuncAnimation(self.fig, self.plot_wavefield , frames=self.P.shape[1], interval=5,blit=True)
+        ani = FuncAnimation(self.fig, self.grafico_animação , frames=self.depth, interval=5,blit=True)
 
         
         plt.show()
