@@ -13,7 +13,7 @@ class Wavefield_1D():
 
         # TODO: read parameters from a file
 
-        self.nt = 1001
+        self.nt = 10001
         self.dt = 0.0012
         self.fmax = 20.0
        
@@ -23,12 +23,12 @@ class Wavefield_1D():
         self.depth=np.arange(self.nz)*self.dz
         
         self.interfaces = [1000, 2000, 3000, 4000]
-        self.velocities = [1500, 2000, 2500, 3000,4500] 
+        self.velocities = [1500, 2000, 2500, 3000,4500]
+        #self.velocities = [2000, 2000, 2000, 2000,2000] 
         self.model = np.full(self.nz, self.velocities[0])
         self.z_fonte=[100,300,500]
         self.z_recp=[800,1000,2000,3500,4000]
         self.fig, self.ax = plt.subplots(num="Wavefield plot", figsize=(8, 8), clear=True)
-
         
 
         
@@ -85,7 +85,7 @@ class Wavefield_1D():
         
         fig2 , ax = plt.subplots(num="Wavefield plot", figsize=(8, 8), clear=True)
 
-        
+        #ax.plot(self.P[:,5000])
         
         ax.imshow(self.P, aspect = "auto", cmap = "Greys")
 
@@ -97,30 +97,26 @@ class Wavefield_1D():
         
         fig2.tight_layout()
         plt.show()
-        
+    
     def grafico_animação(self,frame):
-        self.ax.clear()
-
-        imagem = self.ax.imshow(self.P[frame % self.P.shape[0], :][np.newaxis, :], aspect="auto", cmap="Greys")
-
-        #imagem=self.ax.imshow(self.P[frame,:][np.newaxis ,:], aspect = "auto", cmap = "Greys")
-
-        #image=self.ax.plot(self.P[:,frames])
-
-        self.ax.set_title("Wavefield", fontsize = 18)
-        self.ax.set_xlabel("Time [s]", fontsize = 15)
-        self.ax.set_ylabel("Depth [m]", fontsize = 15) 
         
+        
+        #imagem = self.ax.imshow(self.P[:, frame][np.newaxis, :], aspect="auto", cmap="Greys")
+        linha,= self.ax.plot(self.P[:,frame])
+        self.ax.set_title("Campo de Ondas", fontsize=18)
+        self.ax.set_xlabel("Tempo [s]", fontsize=15)
+        self.ax.set_ylabel("Profundidade [m]", fontsize=15)
         self.fig.tight_layout()
-        return (imagem,)
+        return [linha]
     
     def animação(self):
         
 
-        ani = FuncAnimation(self.fig, self.grafico_animação , frames=self.depth, interval=5,blit=True)
+       ani = FuncAnimation(self.fig, self.grafico_animação, frames=self.nt, interval=7, blit=True)
+       plt.show()
 
         
-        plt.show()
+        
 
     def set_wavelet(self):
     
