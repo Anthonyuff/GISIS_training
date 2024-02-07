@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from numba import njit, prange 
 from matplotlib.animation import FuncAnimation
 
-
+testando
 
 class Wavefield_1D():
     
