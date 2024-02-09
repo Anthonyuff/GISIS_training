@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from numba import njit, prange 
 from matplotlib.animation import FuncAnimation
 
-testando
+
 
 class Wavefield_1D():
     
@@ -28,7 +28,9 @@ class Wavefield_1D():
         self.model = np.full(self.nz, self.velocities[0])
         self.z_fonte=[100,300,500]
         self.z_recp=[800,1000,2000,3500,4000]
+        
         self.fig, self.ax = plt.subplots(num="Wavefield plot", figsize=(8, 8), clear=True)
+        
         
 
         
@@ -73,7 +75,9 @@ class Wavefield_1D():
             laplacian = laplacian_1d(self.P, self.dz, self.nz, n)
 
             self.P[:,n+1] = (self.dt*self.model)**2 * laplacian + 2.0*self.P[:,n] - self.P[:,n-1]
+        self.P *= 1.0 / np.max(self.P) 
 
+        self.seismogram = self.P[self.rec_projection,:].T 
        
 
     def get_type(self):
@@ -143,6 +147,7 @@ class Wavefield_1D():
         
         fig.tight_layout()
         plt.show()
+    
 @njit 
 def laplacian_1d(P , dz, nz, time_id):
     d2P_dz2 = np.zeros(nz)
