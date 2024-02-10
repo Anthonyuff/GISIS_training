@@ -20,7 +20,7 @@ def simulation():
    
     myWave[id].wave_prog()
     
-    myWave[id].animação()
+    myWave[id].grafico_animação()
     myWave[id].plot_wavefield()
     
     myWave[id].plot_model()
