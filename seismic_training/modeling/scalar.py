@@ -15,29 +15,34 @@ class Wavefield_1D():
         self._type = "1D wave propagation in constant density acoustic isotropic media"
 
         # TODO: read parameters from a file
-
+        CFL_max = 0.8
         self.nt = 10001
-        self.dt = 0.0012
+        self.velocities = [2000] 
+        self.dz=7
+        
+        for i in  self.velocities:
+            self.dt = CFL_max * self.dz / i
+        print(self.dt)
         self.fmax = 20.0
        
         self.nz=1000
-        self.dz=7
+        
         self.tempo=np.arange(self.nt)*self.dt
         self.depth=np.arange(self.nz)*self.dz
         
-        self.interfaces = [1000, 2000, 3000, 4000]
+        self.interfaces = [] 
        
         #self.velocities = [1500, 2000, 2500, 3000,4500]
-        self.velocities = [2000, 2000, 2000, 2000,2000] 
        
         self.model = np.full(self.nz, self.velocities[0])
-        self.z_fonte=[100,300,500]
-        self.z_recp=[800,1000,2000,3500,4000]
+        #self.z_fonte=[100,300,500]
+        self.z_fonte=[100]
+        self.z_recp=[800]
+        #self.z_recp=[800,1000,2000,3500,4000]
         
         self.fig, self.ax = plt.subplots(num="Wavefield plot", figsize=(8, 8), clear=True)
         
         
-
         
     def set_model(self):#configurar a velocidade com a interface
         
@@ -46,7 +51,7 @@ class Wavefield_1D():
         
         for layerId, index in enumerate(self.interface_indices):
             self.model[index:] = self.velocities[layerId+1]
-            print(self.model)
+            
 
 
     def plot_model(self):
@@ -142,7 +147,7 @@ class Wavefield_1D():
     
         
         _= FuncAnimation(fig, animate,init_func=init ,frames=self.nt, interval=1e-3*self.dt, blit=True)
-        _.save('animacao.gif', writer='pillow')
+        #_.save('animacao.gif', writer='pillow')
         plt.show()  
         
 
