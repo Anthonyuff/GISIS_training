@@ -9,8 +9,8 @@ class LinearRegression:
        
 
     # Função que descreve a reta
-    def reta(self, x):
-        self.y = self.a0 + self.a1 * x
+    def reta(self):
+        self.y = self.a0 + self.a1 * self.x
         fig,ax= plt.subplots()
         ax.plot(self.x,self.y)
         fig.tight_layout()
@@ -32,21 +32,30 @@ class LinearRegression:
 
     # Criar espaço solução com vários coeficientes a0 e a1
     # Correlacionar através da norma L2 a diferença
-    def solution_space(self, x, y):
+    def solution_space(self):
         n = 1001
+
         self.a0 = np.linspace(-4, 4, n)
         self.a1 = np.linspace(-5, 5, n)
 
         self.a0, self.a1 = np.meshgrid(self.a0, self.a1)
 
         self.mat = np.zeros((n, n))
+        
+        
+        
 
         for i in range(n):
             for j in range(n):
-                self.y_p = self.a0[i, j] + self.a1[i, j] * x
-                self.mat[i, j] = np.sqrt(np.sum((y - self.y_p)**2))
-        fig,ax = plt.subplot()
+                self.y_p = self.a0[i, j] + self.a1[i, j] * self.x
+                self.mat[i, j] = np.sqrt(np.sum((self.y - self.y_p)**2))
+        a0_ind, a1_ind = np.where(self.mat == np.min(self.mat))
+        
+        fig ,ax = plt.subplots()
         ax.imshow(self.mat,extent=[-5,5,-5,5])
+        
+        ax.scatter( self.a0[a0_ind,a1_ind],self.a1[a0_ind,a1_ind])
+        print(np.min(self.mat))
         plt.show()
 
 # Exemplo de uso
