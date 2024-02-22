@@ -6,11 +6,14 @@ class LinearRegression:
         self.a0= -2
         self.a1= -1
         self.x=np.linspace(-2,2,101)
+        
+        self.y = self.a0 + self.a1 * self.x
+        self.y_n = self.y + np.random.rand(len(self.y))
        
 
     # Função que descreve a reta
-    def reta(self):
-        self.y = self.a0 + self.a1 * self.x
+    def plot_reta(self):
+        
         fig,ax= plt.subplots()
         ax.plot(self.x,self.y)
         fig.tight_layout()
@@ -20,8 +23,8 @@ class LinearRegression:
 	    
 
     # Aplicar o ruído no eixo y
-    def ruido(self):
-        self.y_n = self.y + np.random.rand(len(self.y))
+    def plot_ruido(self):
+        
         fig,ax= plt.subplots()
         ax.plot(self.x,self.y_n)
         fig.tight_layout()
@@ -32,6 +35,7 @@ class LinearRegression:
 
     # Criar espaço solução com vários coeficientes a0 e a1
     # Correlacionar através da norma L2 a diferença
+class LinearRegressionIMSHOW(LinearRegression):   
     def solution_space(self):
         n = 1001
 
@@ -49,12 +53,20 @@ class LinearRegression:
             for j in range(n):
                 self.y_p = self.a[i, j] + self.b[i, j] * self.x
                 self.mat[i, j] = np.sqrt(np.sum((self.y_n - self.y_p)**2))
-        self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
+        #self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
+        self.a0_ind, self.a1_ind = np.where(self.mat == np.min(self.mat))
+    
+        
+        
+    def plot_imshow(self):    
         
         fig ,ax = plt.subplots()
-        ax.imshow(self.mat,extent=[-5,5,-5,5])
+
+
+
+        ax.imshow(self.mat,extent=[-5,5,5,-5])
         
-        ax.scatter( self.a[self.min_index],self.b[self.min_index])
+        ax.scatter( self.a[self.a0_ind, self.a1_ind],self.b[self.a0_ind, self.a1_ind])
         print(np.min(self.mat))
         fig.tight_layout()
         plt.show()
