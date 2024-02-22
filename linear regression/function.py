@@ -35,27 +35,28 @@ class LinearRegression:
     def solution_space(self):
         n = 1001
 
-        self.a0 = np.linspace(-4, 4, n)
-        self.a1 = np.linspace(-5, 5, n)
+        self.a = np.linspace(-5, 5, n)
+        self.b = np.linspace(-5, 5, n)
 
-        self.a0, self.a1 = np.meshgrid(self.a0, self.a1)
+        self.a, self.b = np.meshgrid(self.a, self.b)
 
-        self.mat = np.zeros((n, n))
+        self.mat = np.zeros([n, n])
         
         
         
 
         for i in range(n):
             for j in range(n):
-                self.y_p = self.a0[i, j] + self.a1[i, j] * self.x
-                self.mat[i, j] = np.sqrt(np.sum((self.y - self.y_p)**2))
-        a0_ind, a1_ind = np.where(self.mat == np.min(self.mat))
+                self.y_p = self.a[i, j] + self.b[i, j] * self.x
+                self.mat[i, j] = np.sqrt(np.sum((self.y_n - self.y_p)**2))
+        self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
         
         fig ,ax = plt.subplots()
         ax.imshow(self.mat,extent=[-5,5,-5,5])
         
-        ax.scatter( self.a0[a0_ind,a1_ind],self.a1[a0_ind,a1_ind])
+        ax.scatter( self.a[self.min_index],self.b[self.min_index])
         print(np.min(self.mat))
+        fig.tight_layout()
         plt.show()
 
 # Exemplo de uso
