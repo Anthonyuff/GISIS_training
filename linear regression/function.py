@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 
 class LinearRegression:
     def __init__(self):
-        self.a0= -2
-        self.a1= -1
+        self.parametro=[-2,-1]
+       
+       
         self.x=np.linspace(-2,2,101)
         
-        self.y = self.a0 + self.a1 * self.x
+        self.y = self.parametro[0] + self.parametro[1] * self.x
         self.y_n = self.y + np.random.rand(len(self.y))
        
 
@@ -70,6 +71,15 @@ class LinearRegressionIMSHOW(LinearRegression):
         print(np.min(self.mat))
         fig.tight_layout()
         plt.show()
+class MMQ(LinearRegression):
+    def solution(self):
+        G = np.zeros((len(self.y_n), len(self.parametro)))
 
-# Exemplo de uso
+        for n in range(len(self.parametro)): 
+                G[:,n] = self.x**n
 
+        GTG = np.dot(G.T, G)
+        GTD = np.dot(G.T, self.y_n)
+
+        self.m = np.linalg.solve(GTG, GTD)
+        print(self.m)
