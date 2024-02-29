@@ -17,13 +17,16 @@ class Wavefield_1D():
         # TODO: read parameters from a file
         CFL_max = 0.8
         self.nt = 10001
+        self.fmax = 20.0
         self.velocities = [2000] 
-        self.dz=7
+        self.dz=6
         
         for i in  self.velocities:
             self.dt = CFL_max * self.dz / i
         print(self.dt)
-        self.fmax = 20.0
+        
+        
+        
        
         self.nz=1000
         

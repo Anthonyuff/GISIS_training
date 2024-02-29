@@ -11,6 +11,25 @@ class LinearRegression:
         self.y = self.parametro[0] + self.parametro[1] * self.x
         self.y_n = self.y + np.random.rand(len(self.y))
        
+       
+        #CMP
+        self.v_true=4000
+        self.z_true= 800
+        
+        self.p0=((2*self.z_true)/self.v_true)**2
+        self.p1=(1/self.v_true)**2
+      
+        self.nx=5000
+        self.offset= np.linspace(25,self.nx,700)
+        self.gp=np.sqrt(self.p0 + self.p1*(self.offset)**2)
+        self.gp_n=self.gp + 5e-2*(0.05-np.random.rand(len(self.gp)))
+       
+        self.modelo=solution((self.offset)**2,(self.gp_n)**2)
+        self.gp2=np.sqrt(self.modelo[0] + self.modelo[1]*(self.offset)**2)
+        
+
+        
+       
 
     # Função que descreve a reta
     def plot_reta(self):
@@ -19,6 +38,7 @@ class LinearRegression:
         ax.plot(self.x,self.y)
         fig.tight_layout()
         plt.show()
+    
 	
 	
 	    
@@ -52,8 +72,8 @@ class LinearRegressionIMSHOW(LinearRegression):
 
         for i in range(n):
             for j in range(n):
-                self.y_p = self.a[i, j] + self.b[i, j] * self.x
-                self.mat[i, j] = np.sqrt(np.sum((self.y_n - self.y_p)**2))
+                self.y_p = self.a[i, j] + self.b[i, j] * self.offset #self.x para equacao linear
+                self.mat[i, j] = np.sqrt(np.sum((self.gp_n - self.y_p)**2)) #self.y_n para equacao linear
         #self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
         self.a0_ind, self.a1_ind = np.where(self.mat == np.min(self.mat))
     
@@ -71,15 +91,37 @@ class LinearRegressionIMSHOW(LinearRegression):
         print(np.min(self.mat))
         fig.tight_layout()
         plt.show()
-class MMQ(LinearRegression):
-    def solution(self):
-        G = np.zeros((len(self.y_n), len(self.parametro)))
 
-        for n in range(len(self.parametro)): 
-                G[:,n] = self.x**n
 
-        GTG = np.dot(G.T, G)
-        GTD = np.dot(G.T, self.y_n)
 
-        self.m = np.linalg.solve(GTG, GTD)
-        print(self.m)
+class CMP(LinearRegression):
+    
+        
+
+
+
+    def plot_cmpruido(self):
+
+        fig , ax=plt.subplots(figsize=(8, 5), clear=True) 
+      
+        ax.plot(self.offset,self.gp_n,'r')
+        ax.plot(self.offset,self.gp2)
+        fig.tight_layout()
+        ax.invert_yaxis()
+        plt.show()
+
+    
+
+
+def solution(x,noise):
+    G = np.zeros((len(x), 2))
+
+    for n in range(2): 
+                G[:,n] = x**n
+
+    GTG = np.dot(G.T, G)
+    GTD = np.dot(G.T,noise)
+
+    m = np.linalg.solve(GTG, GTD)
+    return m
+    
