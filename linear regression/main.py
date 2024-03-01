@@ -7,13 +7,14 @@ def simulation ():
     model = LinearRegression()
     model.plot_reta()
     model.plot_ruido()
-    man= LinearRegressionIMSHOW()
-    man.solution_space()
-    man.plot_imshow()
+    #man= LinearRegressionIMSHOW()
+    #man.solution_space()
+    
     
     
 
     cmp=CMP()
+    cmp.solution_space()
     cmp.plot_cmpruido()
 
 if __name__ == "__main__":

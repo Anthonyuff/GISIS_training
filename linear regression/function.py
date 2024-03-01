@@ -13,8 +13,8 @@ class LinearRegression:
        
        
         #CMP
-        self.v_true=4000
-        self.z_true= 800
+        self.v_true=3000
+        self.z_true= 500
         
         self.p0=((2*self.z_true)/self.v_true)**2
         self.p1=(1/self.v_true)**2
@@ -72,29 +72,55 @@ class LinearRegressionIMSHOW(LinearRegression):
 
         for i in range(n):
             for j in range(n):
-                self.y_p = self.a[i, j] + self.b[i, j] * self.offset #self.x para equacao linear
-                self.mat[i, j] = np.sqrt(np.sum((self.gp_n - self.y_p)**2)) #self.y_n para equacao linear
+                self.y_p = self.a[i, j] + self.b[i, j] * self.x 
+                self.mat[i, j] = np.sqrt(np.sum((self.y_n- self.y_p)**2)) 
         #self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
         self.a0_ind, self.a1_ind = np.where(self.mat == np.min(self.mat))
+        space=plot_imshow(self.mat,self.a,self.b,self.a0_ind,self.a1_ind)
     
         
         
-    def plot_imshow(self):    
+def plot_imshow(mat,z,v,a0_ind,a1_ind):    
         
         fig ,ax = plt.subplots()
 
 
 
-        ax.imshow(self.mat,extent=[-5,5,5,-5])
+        ax.imshow(mat,extent=[1500,4500,250,750],aspect='auto')
+      
         
-        ax.scatter( self.a[self.a0_ind, self.a1_ind],self.b[self.a0_ind, self.a1_ind])
-        print(np.min(self.mat))
+        #ax.scatter(b[a0_ind, a1_ind],a[a0_ind,a1_ind],color='red')
+        
+        
         fig.tight_layout()
+        
         plt.show()
 
 
 
 class CMP(LinearRegression):
+    def solution_space(self):
+       
+
+        #self.z = np.linspace(self.z_true-0.5*self.z_true, self.z_true-0.5*self.z_true, 101)
+        #self.v = np.linspace(self.v_true-0.5*self.v_true, self.v_true-0.5*self.v_true, 101)
+        self.z = np.linspace(250, 750, 101)
+        self.v = np.linspace(1500,4500, 101)
+
+        self.v,self.z=np.meshgrid(self.v,self.z)
+
+        self.mat = np.zeros([len(self.v), len(self.z)])
+        
+        
+       
+
+        for i in range(len(self.v)):
+            for j in range(len(self.z)):
+                gp_p=np.sqrt((self.offset**2+4*(self.z[i,j])**2)/(self.v[i,j])**2)
+                self.mat[i, j] = np.sqrt(np.sum((self.gp_n - gp_p)**2)) 
+       
+        self.a0_ind, self.a1_ind = np.where(self.mat == np.min(self.mat))
+        space=plot_imshow(self.mat,self.z,self.v,self.a0_ind,self.a1_ind)
     
         
 
