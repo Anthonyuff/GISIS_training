@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 def simulation ():
     model = LinearRegression()
-    model.plot_reta()
-    model.plot_ruido()
+    #model.plot_reta()
+    #model.plot_ruido()
     #man= LinearRegressionIMSHOW()
     #man.solution_space()
     

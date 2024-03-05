@@ -16,8 +16,9 @@ def simulation():
   
 
     myWave[id].set_model()
+    
     myWave[id].set_wavelet()
-   
+    myWave[id].plot_wavelet()
     myWave[id].wave_prog()
     
     myWave[id].grafico_animação()

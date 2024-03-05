@@ -16,19 +16,23 @@ class Wavefield_1D():
 
         # TODO: read parameters from a file
         CFL_max = 0.8
-        self.nt = 10001
-        self.fmax = 20.0
-        self.velocities = [2000] 
-        self.dz=6
+        self.nt = 1001
+        self.dz=10
+        self.velocities = [1500] 
+        self.fmax = (self.velocities[0]/(10*self.dz))
+        CFL_max=0.8
+      
+        
+        #self.dt=0.001
         
         for i in  self.velocities:
             self.dt = CFL_max * self.dz / i
-        print(self.dt)
+        
         
         
         
        
-        self.nz=1000
+        self.nz=1001
         
         self.tempo=np.arange(self.nt)*self.dt
         self.depth=np.arange(self.nz)*self.dz
@@ -155,6 +159,9 @@ class Wavefield_1D():
         
 
     def set_wavelet(self):
+        
+     
+       
     
         t0 = 2.0*np.pi/self.fmax
         fc = self.fmax/(3.0*np.sqrt(np.pi))
@@ -162,14 +169,15 @@ class Wavefield_1D():
 
         arg = np.pi*(np.pi*fc*td)**2.0
 
-        self.wavelet = (1.0 - 2.0*arg)*np.exp(-arg)
+        self.wavelet=(1.0 - 2.0*arg)*np.exp(-arg)
 
     def plot_wavelet(self):
-       
+        
         t = np.arange(self.nt)*self.dt
 
         fig, ax = plt.subplots(figsize = (10, 5), clear = True)
-
+        
+          
         ax.plot(t, self.wavelet)
         ax.set_title("Wavelet", fontsize = 18)
         ax.set_xlabel("Time [s]", fontsize = 15)

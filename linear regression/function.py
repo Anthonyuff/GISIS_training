@@ -89,7 +89,8 @@ def plot_imshow(mat,z,v,a0_ind,a1_ind):
         ax.imshow(mat,extent=[1500,4500,250,750],aspect='auto')
       
         
-        #ax.scatter(b[a0_ind, a1_ind],a[a0_ind,a1_ind],color='red')
+        ax.scatter(v[a0_ind, a1_ind],z[a0_ind,a1_ind],color='red')
+        ax.scatter(3000,500)
         
         
         fig.tight_layout()
