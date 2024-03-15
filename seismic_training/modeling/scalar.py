@@ -16,17 +16,20 @@ class Wavefield_1D():
 
         # TODO: read parameters from a file
         CFL_max = 0.8
-        self.nt = 1001
+        self.nt = 5000
         self.dz=10
         self.velocities = [1500] 
-        self.fmax = (self.velocities[0]/(10*self.dz))
-        CFL_max=0.8
+        #self.fmax=50
+        self.fmax = (np.min(self.velocities)/(9.5*self.dz))
+        print(self.fmax)
+        self.gain = 0.0002
+        #CFL_max=3,5
       
         
-        #self.dt=0.001
+        self.dt=0.002
         
-        for i in  self.velocities:
-            self.dt = CFL_max * self.dz / i
+        #for i in  self.velocities:
+            #self.dt = CFL_max * self.dz / i
         
         
         
@@ -36,6 +39,8 @@ class Wavefield_1D():
         
         self.tempo=np.arange(self.nt)*self.dt
         self.depth=np.arange(self.nz)*self.dz
+
+        metade=len(self.depth)//2
         
         self.interfaces = [] 
        
@@ -43,7 +48,7 @@ class Wavefield_1D():
        
         self.model = np.full(self.nz, self.velocities[0])
         #self.z_fonte=[100,300,500]
-        self.z_fonte=[100]
+        self.z_fonte=[self.depth[metade]]
         self.z_recp=[800]
         #self.z_recp=[800,1000,2000,3500,4000]
         
@@ -80,19 +85,21 @@ class Wavefield_1D():
         plt.savefig('modelo_de_velocidade.png',  bbox_inches='tight')
         plt.show()
 
-    def wave_prog(self):
+    def wave_prog(self,a):
         self.P = np.zeros((self.nz, self.nt)) # P_{i,n}
 
         sId = int(self.z_fonte[0] / self.dz)
 
         for n in range(1,self.nt-1):
 
-            self.P[sId,n] += self.wavelet[n]    
+            #self.P[sId,n] += self.wavelet[n]
+            self.P[sId,n] += a[n]     
 
             laplacian = laplacian_1d(self.P, self.dz, self.nz, n)
 
             self.P[:,n+1] = (self.dt*self.model)**2 * laplacian + 2.0*self.P[:,n] - self.P[:,n-1]
-        
+        self.P *= 1.0 / np.max(self.P) 
+        print(self.P)
        
 
     def get_type(self):
@@ -101,19 +108,39 @@ class Wavefield_1D():
     
 
     def plot_wavefield(self):
+        zloc = np.linspace(0, self.nz-1, 5)
+        zlab = np.array(zloc * self.dz, dtype = int)
+
+        tloc = np.linspace(0, self.nt-1, 11)
+        tlab = np.array(tloc * self.dt, dtype = int)
         
-        fig2 , ax = plt.subplots(num="Wavefield plot", figsize=(8, 8), clear=True)
+        
+        fig2 , ax = plt.subplots(5, 1,num="Wavefield plot", figsize=(8, 30), clear=True)
 
         #ax.plot(self.P[:,5000])
-        
-        ax.imshow(self.P, aspect = "auto", cmap = "Greys")
+        for i,j in enumerate([10,20,30,40,50]):
+            a=self.set_wavelet(j)
+            self.wave_prog(a)
+            self.scale = self.gain * np.std(self.P)
+            
 
+            ax[i].imshow(self.P, aspect = "auto", cmap = "Greys",vmin=-self.scale, vmax=self.scale)
+           
+            ax[i].set_xticks(tloc)
+            ax[i].set_xticklabels(tlab)
+            ax[i].set_yticks(zloc)
+            ax[i].set_yticklabels(zlab )
+            
+            
+            
+            
         
 
-        ax.set_title("Wavefield", fontsize = 18)
-        ax.set_xlabel("Time [s]", fontsize = 15)
-        ax.set_ylabel("Depth [m]", fontsize = 15) 
-        
+            ax[i].set_title(f"Wavefield({j})", fontsize = 10)
+            ax[i].set_xlabel("Time [s]", fontsize = 15)
+            ax[i].set_ylabel("Depth [m]", fontsize = 15)
+            
+        ax.invert_yaxis()
         fig2.tight_layout()
         plt.show()
     
@@ -158,18 +185,18 @@ class Wavefield_1D():
         plt.show()  
         
 
-    def set_wavelet(self):
+    def set_wavelet(self,fmax):
         
      
        
     
-        t0 = 2.0*np.pi/self.fmax
-        fc = self.fmax/(3.0*np.sqrt(np.pi))
+        t0 = 2.0*np.pi/fmax
+        fc = fmax/(3.0*np.sqrt(np.pi))
         td = np.arange(self.nt)*self.dt - t0
 
         arg = np.pi*(np.pi*fc*td)**2.0
-
-        self.wavelet=(1.0 - 2.0*arg)*np.exp(-arg)
+        return (1.0 - 2.0*arg)*np.exp(-arg)
+        #self.wavelet=(1.0 - 2.0*arg)*np.exp(-arg)
 
     def plot_wavelet(self):
         
