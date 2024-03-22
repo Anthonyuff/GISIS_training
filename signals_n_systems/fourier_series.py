@@ -7,7 +7,7 @@ t = np.linspace(-np.pi, np.pi, domain)
 
 # Simple numerical series f(t) : R -> R
 
-frequencies = np.array([2, 5, 8])  # Hz
+frequencies = np.array([2, 50])  # Hz
 
 signal = np.zeros(domain) 
 
@@ -38,15 +38,15 @@ plt.show()
 
 title = "First example"
 
-a = 2.0 * np.sinh(np.pi)/np.pi
+#a = 2.0 * np.sinh(np.pi)/np.pi
 
-signal = a + np.zeros(domain)
+#signal = a + np.zeros(domain)
 
-for n in range(1,501):
+#for n in range(1,501):
     
-    c = a*(-1)**n / (1 + n**2) 
+    #c = a*(-1)**n / (1 + n**2) 
 
-    signal += c*np.cos(n*t) + n*c*np.sin(n*t)
+    #signal += c*np.cos(n*t) + n*c*np.sin(n*t)
 
 
 title = "Second example"
@@ -55,12 +55,21 @@ title = "Second example"
 
 title = "Third example"
 
+sc=(2.0*np.pi**2)/3
+signal = sc + np.zeros(domain)
+for n in range(1,50):
+    
+    l=(4*(-1)**(n+1))/(n**2)
+
+    signal += l*np.cos(n*t)
 
 
 fig, ax = plt.subplots(num = title, figsize = (15,5))
 
-ax.plot(t, signal - np.pi, label = "Fourier series")
-ax.plot(t, np.exp(-t), "--", label = "Real function")
+ax.plot(t, signal , label  = "Fourier series")
+#ax.plot(t, signal , label = "Fourier series")
+#ax.plot(t, np.exp(-t), "--", label = "Real function")
+ax.plot(t, -t**2 +9.85, "--", label = "Real function")
 
 ax.set_xticks(xloc)
 ax.set_xticklabels(xlab)
@@ -70,6 +79,7 @@ ax.set_xlabel("t [s]", fontsize = 15)
 ax.set_ylabel("Amplitude", fontsize = 15)
 
 ax.legend(loc = "upper left", fontsize = 15)
+ax.grid(True)
 
 fig.tight_layout()
 plt.show()
